@@ -1,6 +1,4 @@
-for i,f in ipairs(fs.list("/NekOS/Api/")) do
-  local n = string.match(fs.getName(f), "([^\.]+)")
-  _G[n] = require("/NekOS/Api/"..n)
-end
+_G.api = require("/NekOS/api")
+api:load()
 
 print("Hello World!")

@@ -15,9 +15,9 @@ if http then
       if res ~= nil then
         for str in res:gmatch('"type":"(%w+)"') do table.insert(fType, str) end
         for str in res:gmatch('"path":"([^\"]+)"') do table.insert(fPath, str) end
-        for str in res.gmatch('"name":"([^\"]+)"') do table.insert(fName, str) end
+        for str in res:gmatch('"name":"([^\"]+)"') do table.insert(fName, str) end
       end
-      for i,data in pairs(fTypes) do
+      for i,data in pairs(fType) do
         local path = dpath.."/"..repo.."/"
         if data == "file" then
           cPath = http.get("https://raw.github.com/"..user.."/"..repo.."/"..branch.."/"..fPath[i])

@@ -1,8 +1,6 @@
-local completion = {
+local Github = api(1, {
   { "choice", { "download" } }
-}
-
-local Github = api(1, completion)
+})
 
 function Github:execute(action, ...)
   local res,err = false,"Usage: github download <user> <repo> [download path] [remote path] [branch]"

@@ -1,11 +1,43 @@
-local scomp = require("cc.shell.completion")
+_G.Completions = require("cc.shell.completion")
+
+system:addPath("/NekOS/Api", 2)
 
 local Api = {}
 Api.__index = Api
 
+function Api:load()
+  local apis = {}
+  for i,file in ipairs(fs.list("/NekOS/Api/")) do
+    local name = string.match(fs.getName(file), "([^\.]+)")
+    local api = require("/NekOS/Api/"..name)
+    if type(api) ~= "table" or api["__order__"] == nil then
+      _G[name] = api
+      return
+    end
+    apis[name] = api
+  end
+  for name,api in spairs(apis, function(a,b)
+    return a["__order__"] > b["__order__"]
+  end) do
+    _G[name] = api()
+  end
+end
+
+function Api:buildCompletions(tree)
+  local r = {}
+  for i,func in ipairs(tree) do
+    local opts = nil
+    if type(func) == "table" then func,opts = table.unpack(v) end
+    if type(func) == "string" then func = Completions[func] end
+    if type(func) ~= "function" then func = nil end
+    r[#r+1] = opts and { func, opts } or func
+  end
+  return Completions.build(table.unpack(r))
+end
+
 function Api:__call(order, completion)
   if type(completion) == "table" then
-    completion = scomp.build(completion)
+    completion = self:buildCompletions(completion)
   end
 
   local api = {
