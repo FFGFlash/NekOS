@@ -20,7 +20,29 @@ local System = api(1, {
   }
 })
 
-function System:execute(action, ...) end
+function System:execute(actions, ...)
+  local args = {...}
+  if action == "settings" then
+    local subaction = table.remove(args, 1)
+    if subaction == "get" then
+      print(self.get(table.unpack(args)))
+      return
+    elseif subaction == "set" then
+      print(self.get(table.unpack(args)))
+      return
+    end
+  elseif action == "install" then
+    print(self:install())
+    return
+  elseif action == "reset" then
+    print(self:reset())
+    return
+  elseif action == "update" then
+    print(self:update())
+    return
+  end
+  self:printUsage()
+end
 
 function System:constructor()
   self.define("nekos.initialized", { description="Determines if the system is initialized.", default=false, type="boolean" })
@@ -36,6 +58,10 @@ end
 
 function System:install()
   return github:download("FFGFlash", "NekOS", "/")
+end
+
+function System:update()
+  
 end
 
 function System:getPath()

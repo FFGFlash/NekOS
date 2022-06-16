@@ -17,6 +17,14 @@ end
 
 function Github:constructor() end
 
+function Github.getRepo(user, repo)
+  if repo == nil or user == nil then return false,"User and Repo required" end
+  local res = http.get("https://api.github.com/repos/"..user.."/"..repo, { Accept = "application/vnd.github.v3+json"})
+  if not res then return false,"Can't resolve URL" end
+  local data = json:fromStream(res)
+  return data
+end
+
 function Github.download(user, repo, dpath, rpath, branch)
   if repo == nil or user == nil then return false,"User and Repo required" end
   if rpath == nil then rpath = "" end
