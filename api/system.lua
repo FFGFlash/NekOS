@@ -20,7 +20,7 @@ local System = api(1, {
   }
 })
 
-function System:execute(actions, ...)
+function System:execute(action, ...)
   local args = {...}
   if action == "settings" then
     local subaction = table.remove(args, 1)
