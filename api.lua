@@ -10,9 +10,9 @@ function Api:load()
     local api = require("/NekOS/Api/"..name)
     if type(api) ~= "table" or api["__order__"] == nil then
       _G[name] = api
-      return
+    else
+      apis[name] = api
     end
-    apis[name] = api
   end
   for name,api in spairs(apis, function(a,b)
     return a["__order__"] > b["__order__"]
@@ -26,7 +26,7 @@ function Api:buildCompletions(tree)
   local r = {}
   for i,func in ipairs(tree) do
     local opts = nil
-    if type(func) == "table" then func,opts = table.unpack(v) end
+    if type(func) == "table" then func,opts = table.unpack(func) end
     if type(func) == "string" then func = Completions[func] end
     if type(func) ~= "function" then func = nil end
     r[#r+1] = opts and { func, opts } or func
