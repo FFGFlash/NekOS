@@ -2,6 +2,10 @@ function string.startsWith(s, d)
   return string.sub(s, 1, string.len(d)) == d
 end
 
+function string.endsWith(s, d)
+  return string.sub(s, -string.len(d)) == d
+end
+
 function string.split(s, d)
   d = d or ":"
   local a = {}
