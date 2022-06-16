@@ -1,5 +1,10 @@
 _G.Completions = require("cc.completion")
 
+function table.merge(t, o)
+  for k,v in pairs(o) do t[k] = v end
+  return t
+end
+
 local Api = {}
 Api.__index = Api
 
@@ -28,7 +33,7 @@ function Api:buildCompletions(tree)
       local res = {}
       for i,c in ipairs(a) do
         if c.type == "choice" then
-          for k,v in pairs(a.options) do
+          for k,v in pairs(c.options) do
             local b = simplifier(v)
             table.insert(b, 1, k)
             table.insert(res, b);
@@ -45,7 +50,10 @@ function Api:buildCompletions(tree)
       for i,v in ipairs(a) do
         if type(v) ~= "string" then
           str = false
-          table.insert(res, pre..parser(v))
+          local b = parser(v)
+          for j,w in ipairs(b) do
+            table.insert(res, pre..w)
+          end
         else
           pre = pre..v.." "
         end
