@@ -20,7 +20,7 @@ function Api:load()
     end
   end
   for name,api in spairs(apis, function(a,b)
-    return a["__order__"] > b["__order__"]
+    return a["__order__"] < b["__order__"]
   end) do
     _G[name] = api()
   end

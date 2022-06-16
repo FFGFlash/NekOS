@@ -1,4 +1,4 @@
-local Github = api(100, {
+local Github = api(2, {
   {
     type = "choice",
     options = {
