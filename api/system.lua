@@ -5,8 +5,8 @@ local System = api(0, {
 function System:execute(action, ...) end
 
 function System:constructor()
-  self:define("nekos.initialized", { description="Determines if the system is initialized.", default=false, type="boolean" })
-  self:define("nekos.auto_update", { description="Determines if the system should auto update.", defaults=true, type="boolean" })
+  self.define("nekos.initialized", { description="Determines if the system is initialized.", default=false, type="boolean" })
+  self.define("nekos.auto_update", { description="Determines if the system should auto update.", defaults=true, type="boolean" })
 end
 
 function System:getPath()
