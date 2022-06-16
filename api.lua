@@ -106,7 +106,7 @@ function Api:__call(order, completion)
 
   function api:printUsage()
     for i,usage in ipairs(self["__usage__"]) do
-      print(usage)
+      print(self["__name__"].." "..usage)
     end
   end
 
@@ -114,8 +114,8 @@ function Api:__call(order, completion)
 
   function api:call(...)
     local a = {...}
-    print(a)
     if a[1] and a[2] and fs.getName(a[1]..".lua") == fs.getName(a[2]) then
+      self["__name__"] = string.match(fs.getName(a[2]), "([^\.]+)")
       if not self["__completion__"] then return end
       shell.setCompletionFunction(a[2], self["__completion__"])
       return
