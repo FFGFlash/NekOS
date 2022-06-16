@@ -23,7 +23,7 @@ end
 function System:setPath(path)
   local t = type(path)
   if t ~= "string" and t ~= "table" then return false,"Invalid type" end
-  shel.setPath(t == "string" and path or table.concat(path, ":"))
+  shell.setPath(t == "string" and path or table.concat(path, ":"))
   return true
 end
 
