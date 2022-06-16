@@ -75,14 +75,13 @@ function Api:buildCompletions(tree)
       end
       return {}
     end
+
+    local cur = find(tree)
+    if not cur.type or not Completions[cur.type] then return {} end
+    return Completions[cur.type](current, cur.options)
   end
 
-  local usages = constructUsage(tree)
-  local cur = find(tree)
-  if not cur.type or not Completions[cur.type] then return {} end
-  return Completions[cur.type](current, cur.options)
-
-  return helper, usages
+  return helper, constructUsage(tree)
 end
 
 function Api:__call(order, completion)
