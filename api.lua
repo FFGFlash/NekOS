@@ -1,7 +1,5 @@
 _G.Completions = require("cc.shell.completion")
 
-system:addPath("/NekOS/Api", 2)
-
 local Api = {}
 Api.__index = Api
 
@@ -21,6 +19,7 @@ function Api:load()
   end) do
     _G[name] = api()
   end
+  system:addPath("/NekOS/Api", 2)
 end
 
 function Api:buildCompletions(tree)
