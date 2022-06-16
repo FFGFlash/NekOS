@@ -1,7 +1,7 @@
 _G.Completions = require("cc.completion")
 
-function table.merge(t, o)
-  for k,v in pairs(o) do t[k] = v end
+function table.combine(t, o)
+  for i,v in ipairs(o) do table.insert(t, v) end
   return t
 end
 
@@ -66,7 +66,7 @@ function Api:buildCompletions(tree)
     local usages = {}
 
     for i,v in ipairs(res) do
-      table.merge(usages, parser(v))
+      table.combine(usages, parser(v))
     end
 
     return usages
@@ -76,10 +76,11 @@ function Api:buildCompletions(tree)
     local function find(tree, offset)
       offset = offset or 0
       for i,v in ipairs(tree) do
-        if offset + i == index then return v end
-        if v.type == "choice" then
-          offset = offset + i + 1
-          return find(v.options[args[offset]], offset)
+        if offset + i == index then
+          return v
+        elseif v.type == "choice" then
+          offset = offset + i
+          return find(v.options[args[offset + 1]], offset)
         end
       end
       return {}
@@ -87,7 +88,9 @@ function Api:buildCompletions(tree)
 
     local cur = find(tree)
     if not cur.type or not Completions[cur.type] then return {} end
-    return Completions[cur.type](current, cur.options)
+    local a = {current, cur.space or false}
+    if cur.type == "choice" then table.insert(a, 2, table.keys(cur.options)) end
+    return Completions[cur.type](table.unpack(a))
   end
 
   return helper, constructUsage(tree)
