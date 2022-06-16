@@ -45,10 +45,23 @@ function System:execute(actions, ...)
 end
 
 function System:constructor()
+  self.data = data("/NekOS")
   self.define("nekos.initialized", { description="Determines if the system is initialized.", default=false, type="boolean" })
   self.define("nekos.auto_update", { description="Determines if the system should auto update.", defaults=true, type="boolean" })
   self.get()
   self.set()
+end
+
+function System:save(path, data)
+  return self.data:save(path, data)
+end
+
+function System:load(path)
+  return self.data:load(path)
+end
+
+function System:getManifest()
+  return self:load(".manifest")
 end
 
 function System:reset()
@@ -61,7 +74,10 @@ function System:install()
 end
 
 function System:update()
-  
+  local manifest = self:getManifest()
+  local newManifest = github:getRepo("FFGFlash", "NekOS")
+  if manifest.updated_at == newManifest.updated_at then return true end
+  self:install()
 end
 
 function System:getPath()

@@ -17,7 +17,7 @@ end
 
 function Github:constructor() end
 
-function Github.getRepo(user, repo)
+function Github:getRepo(user, repo)
   if repo == nil or user == nil then return false,"User and Repo required" end
   local res = http.get("https://api.github.com/repos/"..user.."/"..repo, { Accept = "application/vnd.github.v3+json"})
   if not res then return false,"Can't resolve URL" end
@@ -25,7 +25,7 @@ function Github.getRepo(user, repo)
   return data
 end
 
-function Github.download(user, repo, dpath, rpath, branch)
+function Github:download(user, repo, dpath, rpath, branch)
   if repo == nil or user == nil then return false,"User and Repo required" end
   if rpath == nil then rpath = "" end
   if dpath == nil then dpath = "/NekOS/Downloads/" end
@@ -75,6 +75,11 @@ function Github.download(user, repo, dpath, rpath, branch)
   local res,err = downloadManager(rpath)
   if not res then return res,err end
   for i,data in pairs(res.files) do downloadFile(i, table.unpack(data)) end
+
+  local meta = self:getRepo(user, repo)
+  local metaFile = fs.open(dpath.."/"..repo.."/.manifest","w")
+  metaFile.write(json:stringify(meta, true))
+  metaFile.close()
 
   return true
 end
