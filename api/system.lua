@@ -44,3 +44,6 @@ function System.get(key)
     return settings.get(key)
   end
 end
+
+System:call(...)
+return System
