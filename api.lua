@@ -37,30 +37,31 @@ function Api:buildCompletions(tree)
           table.insert(res, c.required and "<"..c.name..">" or "["..c.name.."]")
         end
       end
-
-      local function parser(a)
-        local res,str,pre = {},true,""
-        for i,v in ipairs(a) do
-          if type(v) ~= "string" then
-            str = false
-            table.insert(res, pre..parser(v))
-          else
-            pre = pre..v.." "
-          end
-        end
-        if str then table.insert(res, table.concat(a, " ")) end
-        return res
-      end
-
-      local res = simplifier(tree)
-      local usages = {}
-
-      for i,v in ipairs(res) do
-        table.merge(usages, parser(v))
-      end
-
-      return usages
+      return res
     end
+
+    local function parser(a)
+      local res,str,pre = {},true,""
+      for i,v in ipairs(a) do
+        if type(v) ~= "string" then
+          str = false
+          table.insert(res, pre..parser(v))
+        else
+          pre = pre..v.." "
+        end
+      end
+      if str then table.insert(res, table.concat(a, " ")) end
+      return res
+    end
+
+    local res = simplifier(tree)
+    local usages = {}
+
+    for i,v in ipairs(res) do
+      table.merge(usages, parser(v))
+    end
+
+    return usages
   end
 
   local function helper(shell, index, current, args)
