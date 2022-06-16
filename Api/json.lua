@@ -11,23 +11,23 @@ function Json:constructor()
 end
 
 function Json:parse(str)
-  local function removeWhite(s)
+  function removeWhite(s)
     while self.whites[s:sub(1,1)] do
       s = s:sub(2)
     end
     return s
   end
 
-  local function parseBoolean(s)
+  function parseBoolean(s)
     local v = s:sub(1,4) == "true"
     return v, removeWhite(s:sub(v and 5 or 6))
   end
 
-  local function parseNull(s)
+  function parseNull(s)
     return nil, removeWhite(s:sub(5))
   end
 
-  local function parseNumber(s)
+  function parseNumber(s)
     local i = 1
     while self.numChars[s:sub(i, i)] or tonumber(s:sub(i, i)) do
       i = i + 1
@@ -36,7 +36,7 @@ function Json:parse(str)
     return v, removeWhite(s:sub(i))
   end
 
-  local function parseString(s)
+  function parseString(s)
     s = s:sub(2)
     local v = ""
     while s:sub(1, 1) ~= "\"" do
@@ -53,7 +53,7 @@ function Json:parse(str)
     return v, removeWhite(s:sub(2))
   end
 
-  local function parseArray(s)
+  function parseArray(s)
     s = removeWhite(s:sub(2))
     local a, i = {}, 1
     while s:sub(1, 1) ~= "]" do
@@ -66,7 +66,14 @@ function Json:parse(str)
     return a, removeWhite(s:sub(2))
   end
 
-  local function parseObject(s)
+  function parseMember(s)
+    local k, v = nil, nil
+    k, s = parseValue(s)
+    v, s = parseValue(s)
+    return k, v, s
+  end
+
+  function parseObject(s)
     s = removeWhite(s:sub(2))
     local t = {}
     while s:sub(1, 1) ~= "}" do
@@ -78,14 +85,7 @@ function Json:parse(str)
     return t, removeWhite(s:sub(2))
   end
 
-  local function parseMember(s)
-    local k, v = nil, nil
-    k, s = parseValue(s)
-    v, s = parseValue(s)
-    return k, v, s
-  end
-
-  local function parseValue(s)
+  function parseValue(s)
     local f = s:sub(1, 1)
     if f == "{" then
       return parseObject(s)
