@@ -1,4 +1,4 @@
-local Github = api(1, {
+local Github = api(100, {
   { "choice", { "download" } }
 })
 
@@ -60,6 +60,7 @@ function Github.download(user, repo, dpath, rpath, branch)
   end
 
   local res,err = downloadManager(rpath)
+  if not res then return res,err end
   for i,data in pairs(res.files) do downloadFile(i, table.unpack(data)) end
 
   return true

@@ -1,5 +1,23 @@
-local System = api(0, {
-  { "choice", { "install", "reset", "update" }}
+local System = api(1, {
+  {
+    type = "choice",
+    options = {
+      install = {},
+      reset = {},
+      update = {},
+      settings = {
+        { type = "choice", options = {
+          set = {
+            { type = "setting", name = "setting", required = true },
+            { name = "value", required = true }
+          },
+          get = {
+            { type = "setting", name = "setting", required = true }
+          }
+        } }
+      }
+    }
+  }
 })
 
 function System:execute(action, ...) end
@@ -7,6 +25,17 @@ function System:execute(action, ...) end
 function System:constructor()
   self.define("nekos.initialized", { description="Determines if the system is initialized.", default=false, type="boolean" })
   self.define("nekos.auto_update", { description="Determines if the system should auto update.", defaults=true, type="boolean" })
+  self.get()
+  self.set()
+end
+
+function System:reset()
+  self.set("nekos.initialized", false)
+  self:install()
+end
+
+function System:install()
+  return github:download("FFGFlash", "NekOS", "/")
 end
 
 function System:getPath()
