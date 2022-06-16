@@ -63,8 +63,6 @@ function Api:buildCompletions(tree)
     end
   end
 
-  local usages = constructUsage(tree)
-
   local function helper(shell, index, current, args)
     local function find(tree, offset)
       offset = offset or 0
@@ -77,17 +75,18 @@ function Api:buildCompletions(tree)
       end
       return {}
     end
-
-    local cur = find(tree)
-    if not cur.type or not Completions[cur.type] then return {} end
-    return Completions[cur.type](current, cur.options)
   end
+
+  local usages = constructUsage(tree)
+  local cur = find(tree)
+  if not cur.type or not Completions[cur.type] then return {} end
+  return Completions[cur.type](current, cur.options)
 
   return helper, usages
 end
 
 function Api:__call(order, completion)
-  local usage = ""
+  local usage = {}
 
   if type(completion) == "table" then
     completion,usage = self:buildCompletions(completion)
