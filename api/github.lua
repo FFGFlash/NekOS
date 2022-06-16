@@ -1,5 +1,10 @@
 local Github = api(100, {
-  { "choice", { "download" } }
+  {
+    type = "choice",
+    options = {
+      download = {}
+    }
+  }
 })
 
 function Github:execute(action, ...)
