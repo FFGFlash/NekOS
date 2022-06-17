@@ -8,10 +8,13 @@ local System = api(2, {
       settings = {
         { type = "choice", options = {
           set = {
-            { type = "setting", name = "setting", required = true },
-            { name = "value", required = true }
+            { type = "setting", name = "setting" },
+            { name = "value" }
           },
           get = {
+            { type = "setting", name = "setting" }
+          },
+          info = {
             { type = "setting", name = "setting", required = true }
           }
         } }
@@ -22,26 +25,36 @@ local System = api(2, {
 
 function System:execute(action, ...)
   local args = {...}
+  local s, e = false, ""
   if action == "settings" then
     local subaction = table.remove(args, 1)
     if subaction == "get" then
-      print(self.get(table.unpack(args)))
-      return
+      s, e = self.get(table.unpack(args))
+      if s then print(s) end
     elseif subaction == "set" then
-      print(self.get(table.unpack(args)))
-      return
+      s, e = self.get(table.unpack(args))
+      if s then print(s) end
+    elseif subaction == "info" then
+      s, e = self.info(table.unpack(args))
+      if s then
+        print(string.format([[Type: %s Default: %s Value: %s
+        %s]], s.type, tostring(s.default), tostring(s.value), s.description))
+      end
     end
   elseif action == "install" then
-    print(self:install())
-    return
+    s, e = self:install()
+    if s then print(s) end
   elseif action == "reset" then
-    print(self:reset())
-    return
+    s, e = self:reset()
+    if s then print(s) end
   elseif action == "update" then
-    print(self:update())
-    return
+    s, e = self:update()
+    if s then print(s) end
   end
-  self:printUsage()
+  if not s then
+    print(e)
+    self:printUsage()
+  end
 end
 
 function System:constructor()
@@ -66,7 +79,7 @@ end
 
 function System:reset()
   self.set("nekos.initialized", false)
-  self:install()
+  return self:install()
 end
 
 function System:install()
@@ -77,7 +90,7 @@ function System:update()
   local manifest = self:getManifest()
   local newManifest = github:getRepo("FFGFlash", "NekOS")
   if manifest.updated_at == newManifest.updated_at then return true end
-  self:install()
+  return self:install()
 end
 
 function System:getPath()
@@ -107,6 +120,12 @@ function System.set(key, value)
     settings.set(key, value)
   end
   settings.save("/NekOS/.settings")
+  return true
+end
+
+function System.info(key)
+  if not key then return false,"No key provided" end
+  return settings.getDetails(key)
 end
 
 function System.get(key)
@@ -114,6 +133,7 @@ function System.get(key)
   if key then
     return settings.get(key)
   end
+  return true
 end
 
 System:call(...)
