@@ -122,7 +122,7 @@ function Json:stringify(json, pretty, u, o)
   pretty, u, o = pretty or false, u or 0, o or {}
 
   local function tab(i)
-    str = str..("\t"):rep(i)..i
+    str = str..("\t"):rep(u)..i
   end
 
   local function encoding(t, b, c, i, l)
