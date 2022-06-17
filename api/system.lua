@@ -58,10 +58,24 @@ end
 
 function System:constructor()
   self.data = data("/NekOS")
+
   self.define("nekos.initialized", { description="Determines if the system is initialized.", default=false, type="boolean" })
   self.define("nekos.auto_update", { description="Determines if the system should auto update.", default=true, type="boolean" })
+
+  local s = self.info("lua.autocomplete")
+  self.define("lua.autocomplete", { description="[WARNING] NekOS does not support lua autocompletion\n"..s.description, default=false, type=s.type })
+
+  s = self.info("edit.autocomplete")
+  self.define("edit.autocomplete", { description="[WARNING] NekOS does not support edit autocompletion\n"..s.description, default=false, type=s.type })
+
   self.get()
   self.set()
+
+  if not self.get("nekos.initialized") then
+    self.set("nekos.initialized", true)
+    self.set("lua.autocomplete", false)
+    self.set("edit.autocomplete", false)
+  end
 end
 
 function System:save(path, data)
