@@ -75,6 +75,7 @@ function Api:buildCompletions(tree)
   local function helper(shell, index, current, args)
     local function find(tree, offset)
       offset = offset or 0
+      if not tree then return {} end
       for i,v in ipairs(tree) do
         if offset + i == index then
           return v
