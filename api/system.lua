@@ -37,8 +37,7 @@ function System:execute(action, ...)
     elseif subaction == "info" then
       s, e = self.info(table.unpack(args))
       if s then
-        print(string.format([[Type: %s Default: %s Value: %s
-        %s]], s.type, tostring(s.default), tostring(s.value), s.description))
+        print(string.format("Type: %s Default: %s Value: %s\n%s", s.type, tostring(s.default), tostring(s.value), s.description))
       end
     end
   elseif action == "install" then
@@ -60,7 +59,7 @@ end
 function System:constructor()
   self.data = data("/NekOS")
   self.define("nekos.initialized", { description="Determines if the system is initialized.", default=false, type="boolean" })
-  self.define("nekos.auto_update", { description="Determines if the system should auto update.", defaults=true, type="boolean" })
+  self.define("nekos.auto_update", { description="Determines if the system should auto update.", default=true, type="boolean" })
   self.get()
   self.set()
 end
