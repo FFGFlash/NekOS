@@ -68,9 +68,6 @@ function System:constructor()
   s = self.info("edit.autocomplete")
   self.define("edit.autocomplete", { description="[WARNING] NekOS does not support edit autocompletion\n"..s.description, default=false, type=s.type })
 
-  self.get()
-  self.set()
-
   if not self.get("nekos.initialized") then
     self.set("nekos.initialized", true)
     self.set("lua.autocomplete", false)
