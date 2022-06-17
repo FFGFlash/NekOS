@@ -3,6 +3,7 @@ local Data = api(1)
 function Data:execute() end
 
 function Data:constructor(root)
+  self.__index = self
   root = root or "/"
   local inst = setmetatable({ root = root }, self)
   return inst

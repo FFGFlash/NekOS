@@ -12,7 +12,7 @@ function Github:execute(action, ...)
   if action == "download" then
     res,err = self.download(...)
   end
-  if not res then print(err) end
+  if not res then self:printUsage() end
 end
 
 function Github:constructor() end
