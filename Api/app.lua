@@ -174,11 +174,13 @@ function App:install(user, repo)
     return false, "Descriptor not found"
   end
   self.Apps[repo] = { 1, 2, descriptor.hidden or false }
+  self.Apps:save()
   return true, "Successfully installed application"
 end
 
 function App:uninstall(app)
   self.Apps[app] = nil
+  self.Apps:save()
   if not fs.exists("/NekOS/Apps/"..app) then return false, "App doesn't exist" end
   fs.delete("/NekOS/Apps/"..app)
   return true, "Successfully uninstalled application"
