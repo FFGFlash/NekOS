@@ -21,7 +21,7 @@ return function(app, user)
   end
 
   function View:build()
-    self.Strut = { Value = nil, Index = 0 }
+    self.Struct = { Value = nil, Index = 0 }
     self.Input = { Value = "", Index = 0, Line = 1 }
     self.Timer = os.startTimer(0.25)
 
