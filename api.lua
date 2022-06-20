@@ -90,7 +90,7 @@ function Api:buildCompletions(tree)
     local cur = find(tree)
     if not cur.type or not Completions[cur.type] then return {} end
     local a = {current, cur.space or false}
-    if cur.type == "choice" then table.insert(a, 2, table.keys(cur.options)) end
+    if cur.options then table.insert(a, 2, table.keys(cur.options)) end
     return Completions[cur.type](table.unpack(a))
   end
 

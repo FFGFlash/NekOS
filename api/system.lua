@@ -25,7 +25,7 @@ local System = api(2, {
 
 function System:execute(action, ...)
   local args = {...}
-  local s, e = false, ""
+  local s, e = false, "Invalid Action"
   if action == "settings" then
     local subaction = table.remove(args, 1)
     if subaction == "get" then

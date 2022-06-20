@@ -8,7 +8,7 @@ function shell.complete(text)
   if not path then return {} end
   local info = shell.getCompletionInfo()
   local func = info[path] or info["/"..path]
-  if not func then return {} end
+  if not func or not func.fnComplete then return {} end
   return func.fnComplete(shell, index, table.remove(arr, index + 1), arr)
 end
 

@@ -70,6 +70,10 @@ function Data:load(path)
     return fs.exists(rawget(self, "path"))
   end
 
+  function manager:raw()
+    return rawget(self, "data")
+  end
+
   function manager:save(path)
     local success,err = super:save(self.file, rawget(self, "data"), rawget(self, "json"))
     if not success then return false,err end
