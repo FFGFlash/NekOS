@@ -111,7 +111,7 @@ return function(app)
     shell.run(self.Input.Value)
     self.Input.Value = ""
     _, self.Input.Line = term.getCursorPos()
-    term.setCursorBlind(true)
+    term.setCursorBlink(true)
   end
 
   function View:getCompletion()

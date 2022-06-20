@@ -122,7 +122,7 @@ return function(app, user)
     if self.Struct.Index >= #self.Structure then
       return self.App:activate("login")
     end
-    term.setCursorBlind(true)
+    term.setCursorBlink(true)
     self:nextStruct()
   end
 

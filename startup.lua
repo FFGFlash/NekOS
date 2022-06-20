@@ -52,7 +52,7 @@ if system:get("nekos.auto_update") then
   end
 end
 
-tern.clear()
+term.clear()
 term.setCursorPos(1, 1)
 
 local user = system:getUser()

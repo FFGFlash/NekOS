@@ -102,7 +102,7 @@ return function(app, user)
     end
     term.write("Incorrect Password.")
     self.Input.Value = ""
-    term.setCursorBlind(true)
+    term.setCursorBlink(true)
   end
 
   return View
