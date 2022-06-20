@@ -201,7 +201,8 @@ function App:run(app, ...)
     if not s then return false, e end
     descriptor()
   end
-  local app = self:require(app.."/"..descriptor.main)(app, ...)
+  local name = string.match(fs.getName(descriptor.main), "([^\.]+)")
+  local app = self:require(app.."/"..name)(app, ...)
   return app:start() or true
 end
 
