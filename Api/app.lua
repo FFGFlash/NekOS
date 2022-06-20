@@ -15,7 +15,7 @@ local App = api(2, {{
     update = {
       { type = "app", name = "app", required = true }
     },
-    execute = {
+    run = {
       { type = "app", name = "app", required = true },
       { name = "args..." }
     }
@@ -33,8 +33,8 @@ function App:execute(action, ...)
   elseif action == "update" then
     s, e = self:update(...)
     if s then print(s) end
-  elseif action == "execute" then
-    s, e = self:execute(...)
+  elseif action == "run" then
+    s, e = self:run(...)
     if s then print(s) end
   end
   if not s then
@@ -196,7 +196,7 @@ function App:update(app)
   return self:install(meta.owner.login, meta.name)
 end
 
-function App:execute(app, ...)
+function App:run(app, ...)
   local descriptor, exists = self:getDescriptor(app)
   if not exists then return false, "App not found." end
   if not descriptor["local"] then
