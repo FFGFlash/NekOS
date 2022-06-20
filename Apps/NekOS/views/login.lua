@@ -1,7 +1,7 @@
-return function(app, user)
+return function(a, u)
   local View = {
-    App = app,
-    User = user,
+    App = a,
+    User = u,
     Connections = {}
   }
 

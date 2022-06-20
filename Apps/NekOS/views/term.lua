@@ -1,6 +1,6 @@
-return function(app)
+return function(a)
   local View = {
-    App = app,
+    App = a,
     Connections = {}
   }
 
