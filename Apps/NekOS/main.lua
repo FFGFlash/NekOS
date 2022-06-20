@@ -19,7 +19,8 @@ function App:activate(name)
   end
 
   if self.Views.List[name] then
-    self.Views.Active = self.Views.List[name]()
+    self.Views.Active = self.Views.List[name]
+    self.Views.Active:build()
   end
 end
 
