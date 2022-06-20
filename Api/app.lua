@@ -48,6 +48,10 @@ function App:constructor()
   self.Instances = {}
   self.Apps = system:load(".apps")
 
+  if not fs.exists("/NekOS/Apps") then
+    fs.mkdir("/NekOS/Apps")
+  end
+
   for _, app in pairs(self:getApps()) do
     local descriptor, exists = self:getDescriptor(app)
     if not exists then
