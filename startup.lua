@@ -42,6 +42,7 @@ if system:get("nekos.auto_update") then
 
   s, e = system:update()
 
+  term.setCursorPos(math.floor((w - string.len(e)) / 2), math.floor(h / 2 + 2))
   term.clearLine()
   term.write(e)
 
