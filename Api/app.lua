@@ -119,10 +119,11 @@ function App:constructor()
     end
 
     function app:setInterval(callback, time, ...)
+      local args = { ... }
       local token = os.startTimer(time)
       local conn = self:connect("timer", function(a, f)
         if f ~= token then return end
-        callback(a, ...)
+        callback(a, table.unpack(args))
         token = os.startTimer(time)
       end)
       return { Token = token, Conn = conn }
