@@ -132,7 +132,8 @@ end
 
 function System:update()
   local manifest = self:getManifest()
-  local newManifest = github:getRepo("FFGFlash", "NekOS")
+  local newManifest, e = github:getRepo("FFGFlash", "NekOS")
+  if not newManifest then return false, e end
   if manifest.updated_at == newManifest.updated_at then return false, "System up to date" end
   local s, e = self:install()
   return s, s and "System updated" or e
