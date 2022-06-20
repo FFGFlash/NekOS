@@ -1,4 +1,6 @@
-local Md5 = api(0, {{ name = "string...", required = false }})
+local Md5 = api(0, {
+  { name = "string..." }
+})
 
 function Md5:execute(...)
   local string = table.concat({...}, " ")

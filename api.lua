@@ -47,18 +47,22 @@ function Api:buildCompletions(tree)
 
     local function parser(a)
       local res,str,pre = {},true,""
-      for i,v in ipairs(a) do
-        if type(v) ~= "string" then
-          str = false
-          local b = parser(v)
-          for j,w in ipairs(b) do
-            table.insert(res, pre..w)
+      if type(a) == "table" then
+        for i,v in ipairs(a) do
+          if type(v) ~= "string" then
+            str = false
+            local b = parser(v)
+            for j,w in ipairs(b) do
+              table.insert(res, pre..w)
+            end
+          else
+            pre = pre..v.." "
           end
-        else
-          pre = pre..v.." "
         end
+        if str then table.insert(res, table.concat(a, " ")) end
+      elseif type(a) == "string" then
+        table.insert(res, a)
       end
-      if str then table.insert(res, table.concat(a, " ")) end
       return res
     end
 
