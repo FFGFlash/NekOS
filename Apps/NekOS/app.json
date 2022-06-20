@@ -1,0 +1,7 @@
+{
+  "name": "NekOS",
+  "description": "Main application",
+  "main": "main.lua",
+  "local": true,
+  "hidden": true
+}

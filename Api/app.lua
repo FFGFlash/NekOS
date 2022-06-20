@@ -26,19 +26,15 @@ function App:execute(action, ...)
   local s, e = false, "Invalid Action"
   if action == "install" then
     s, e = self:install(...)
-    if s then print(s) end
   elseif action == "uninstall" then
     s, e = self:uninstall(...)
-    if s then print(s) end
   elseif action == "update" then
     s, e = self:update(...)
-    if s then print(s) end
   elseif action == "run" then
     s, e = self:run(...)
-    if s then print(s) end
   end
+  print(e)
   if not s then
-    print(e)
     self:printUsage()
   end
 end
@@ -52,15 +48,15 @@ function App:constructor()
     fs.mkdir("/NekOS/Apps")
   end
 
-  for _, app in pairs(self:getApps()) do
+  for _, app in ipairs(self:getApps()) do
     local descriptor, exists = self:getDescriptor(app)
     if not exists then
       self:uninstall(app)
     else
-      if not self.Apps[name] then
-        self.Apps[name] = { 1, 2, false }
+      if not self.Apps[app] then
+        self.Apps[app] = { 1, 2, false }
       end
-      self.Apps[name][3] = descriptor.hidden or false
+      self.Apps[app][3] = descriptor.hidden or false
     end
   end
 
@@ -115,7 +111,7 @@ function App:constructor()
     end
 
     function app:require(path)
-      return self.Data:require(self.Id.."/"..path)
+      return App.Data:require(self.Id.."/"..path)
     end
 
     function app:list(dir, recursive)
@@ -170,7 +166,7 @@ function App:getDescriptor(app)
 end
 
 function App:install(user, repo)
-  local s, e = github:downlaod(user, repo, "/NekOS/Apps/")
+  local s, e = github:download(user, repo, "/NekOS/Apps/")
   if not s then return false, e end
   local descriptor, exists = self:getDescriptor(repo)
   if not exists then
@@ -178,22 +174,23 @@ function App:install(user, repo)
     return false, "Descriptor not found"
   end
   self.Apps[repo] = { 1, 2, descriptor.hidden or false }
-  return true
+  return true, "Successfully installed application"
 end
 
 function App:uninstall(app)
   self.Apps[app] = nil
-  if not fs.exists("/NekOS/Apps/"..app) then return false, "App doesn't exist." end
+  if not fs.exists("/NekOS/Apps/"..app) then return false, "App doesn't exist" end
   fs.delete("/NekOS/Apps/"..app)
-  return true
+  return true, "Successfully uninstalled application"
 end
 
 function App:update(app)
   local meta, exists = self:getMeta(app)
   if not exists then return false, "App not found." end
   local newMeta = github:getRepo(meta.owner.login, meta.name)
-  if meta.updated_at == newMeta.updated_at then return false, "App up to date." end
-  return self:install(meta.owner.login, meta.name)
+  if meta.updated_at == newMeta.updated_at then return true, "App up to date." end
+  local s, e = self:install(meta.owner.login, meta.name)
+  return s, s and "Successfully updated application" or e
 end
 
 function App:run(app, ...)

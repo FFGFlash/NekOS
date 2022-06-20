@@ -111,8 +111,8 @@ function Api:__call(order, completion)
     ["__name__"] = ""
   }
 
-  function api:__call()
-    return self:constructor() or self
+  function api:__call(...)
+    return self:constructor(...) or self
   end
 
   function api:printUsage()
@@ -136,7 +136,8 @@ function Api:__call(order, completion)
         a[i] = nil
       end
     end
-    self:execute(...)
+    local name = string.match(fs.getName(shell.getRunningProgram()), "([^\.]+)")
+    self.execute(_G[name], ...)
   end
 
   return setmetatable(api, api)
