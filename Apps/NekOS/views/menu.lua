@@ -68,6 +68,7 @@ return function(a, u)
     self.TextButtons = {}
 
     self:addTextButton(self.Width - 1, 1, "> ", function() self.App:activate("term") end, colors.black, colors.white)
+    self:addTextButton(self.Width - 3, 1, "A ", function() self.App:activate("store") end, colors.blue, colors.white)
   end
 
   function View:handleTerminate()
