@@ -1,7 +1,8 @@
 return function(a)
   local View = {
     App = a,
-    Connections = {}
+    Connections = {},
+    History = {}
   }
 
   function View:connect(event, callback, this)
@@ -17,7 +18,8 @@ return function(a)
 
   function View:build()
     self.Completion = { List = {}, Index = 1 }
-    self.Input = { Value = "", Index = 0, Line = 1 }
+    self.Input = { Value = "", Index = 0, Line = #self.History + 1 }
+    self.Line = math.max(0, #self.History - height + 1)
 
     term.setCursorBlink(true)
     term.setTextColor(system:getColor("nekos.text_color"))
@@ -29,20 +31,61 @@ return function(a)
     self:connect("paste", self.handleInput)
     self:connect("key", self.handleKeyPressed)
     self:connect("terminate", self.handleTerminate)
+    self:connect("mouse_scroll", self.handleScroll)
+    self:connect("print", self.handlePrint)
+    self:connect("clear", self.handleClear)
+    self:connect("term_resize", self.handleResize)
+
+    self:handleResize()
   end
 
   function View:draw()
     local c = self:getCompletion()
 
-    term.setCursorPos(1, self.Input.Line)
-    term.clearLine()
-    term.write("> ")
+    term.clear()
+    term.setCursorPos(1, 1)
+    for i = 1, self.Height, 1 do
+      local j = self.Line + i
+      if j <= #self.History then
+        term.setCursorPos(1, i)
+        term.write(self.History[j])
+      end
+    end
 
-    local x,_ = term.getCursorPos()
-    term.write(self.Input.Value)
-    term.setTextColor(system:getColor("nekos.completion_color"))
-    if c then term.write(c) end
-    term.setCursorPos(x + self.Input.Index, self.Input.Line)
+    local cmdLine = self.Input.Line - self.Line
+    if cmdLine > 0 and cmdLine <= height then
+      term.setCursorPos(1, cmdLine)
+      term.clearLine()
+      term.write("> ")
+
+      local x,y = term.getCursorPos()
+      term.write(self.Input.Value)
+      term.setTextColor(system:getColor("nekos.completion_color"))
+      if c then term.write(c) end
+      term.setCursorPos(x + self.Input.Index, y)
+    end
+  end
+
+  function View:handleResize()
+    self.Width, self.Height = term.getSize()
+  end
+
+  function View:handleClear()
+    self.History = {}
+    self:resetScroll()
+  end
+
+  function View:handlePrint(text)
+    table.insert(self.History, text)
+    self:resetScroll()
+  end
+
+  function View:handleScroll(direction, x, y)
+    self.Line = math.max(self.Line + direction, 0)
+  end
+
+  function View:resetScroll()
+    self.Line = math.max(0, #self.History - self.Height + 1)
   end
 
   function View:moveCursor(c)
@@ -83,6 +126,7 @@ return function(a)
 
   function View:handleInput(c)
     if not c then return
+    self:resetScroll()
     elseif type(c) == "number" then
       local p = self.Input.Index + c
       self.Input.Value = string.sub(self.Input.Value, 1, p - 1)..string.sub(self.Input.Value, p + 1, -1)
@@ -101,6 +145,7 @@ return function(a)
   end
 
   function View:processInput()
+    self:resetScroll()
     self.Completion = { List = {}, Index = 1 }
     self.Input.Index = 0
     local w, h = term.getSize()
@@ -127,11 +172,7 @@ return function(a)
     elseif self.Completion.Index > max then
       self.Completion.Index = 1
     end
-  end
-
-  function View:scroll(c)
-    term.scroll(c)
-    self.Input.Line = self.Input.Line - c
+    self:resetScroll()
   end
 
   function View:fetchShellCompletions()
