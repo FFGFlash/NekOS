@@ -82,7 +82,7 @@ function Network:execute(action, ...)
 end
 
 function Network:constructor()
-  self:Connect()
+  self:connect()
   self.RequestTimeout = 15
 
   function self:constructor(protocol, requestTimeout)
