@@ -107,7 +107,7 @@ function Api:buildCompletions(tree)
 end
 
 function Api:__call(order, completion)
-  local usage = {}
+  local usage = nil
 
   if type(completion) == "table" then
     completion,usage = self:buildCompletions(completion)
@@ -125,6 +125,7 @@ function Api:__call(order, completion)
   end
 
   function api:printUsage()
+    if not self["__usage__"] then return end
     print(self["__name__"])
     for i,usage in ipairs(self["__usage__"]) do
       print(self["__name__"].." "..usage)
