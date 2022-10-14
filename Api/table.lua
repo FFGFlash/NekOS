@@ -17,6 +17,10 @@ function table.set(t)
   return s
 end
 
+function table.has(t, v)
+  return table.set(t)[v] ~= nil
+end
+
 function table.find(t, v)
   local s = table.set(t)
   return s[v] and s[v][1] or nil
