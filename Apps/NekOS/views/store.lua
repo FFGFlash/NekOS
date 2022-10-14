@@ -2,7 +2,9 @@ return function(a, u)
   local View = {
     App = a,
     User = u,
-    Connections = {}
+    Connections = {},
+    Width = 0,
+    Height = 0
   }
 
   function View:connect(event, callback, this)
@@ -32,6 +34,7 @@ return function(a, u)
   end
 
   function View:build()
+    self:handleResize()
     self:connect("mouse_click", self.handleMousePressed)
     self:connect("term_resize", self.handleResize)
     self:connect("terminate", self.handleTerminate)
