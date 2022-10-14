@@ -99,7 +99,7 @@ return function(a, u)
   function View:processInput()
     self.Input.Index = 0
     local w, h = term.getSize()
-    if self.Input.Index + 1 > h then
+    if self.Input.Line + 1 > h then
       term.scroll(h - self.Input.Line)
       self.Input.Line = self.Input.Line - 1
     end
