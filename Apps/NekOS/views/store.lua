@@ -135,7 +135,7 @@ return function(a, u)
 
     term.setCursorPos(cx, cy)
     term.setTextColor(tc)
-    term.setBackgroundColor(tb)
+    term.setBackgroundColor(colors.blue)
 
     term.clearLine()
     term.write("> ")
