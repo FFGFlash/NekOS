@@ -100,6 +100,10 @@ function Network:constructor()
       return true, "Network Created Successfully"
     end
 
+    function network:validate(protocol)
+      return protocol == self.Protocol
+    end
+
     function network:lookup(hostname)
       return Network:lookup(self.Protocol, hostname)
     end
