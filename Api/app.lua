@@ -118,20 +118,35 @@ function App:constructor()
       return path.list(self.Path.."/"..dir, recursive)
     end
 
-    function app:setInterval(callback, time, ...)
+    function app:setInterval(callback, time, this, ...)
       local args = { ... }
       local token = os.startTimer(time)
       local conn = self:connect("timer", function(a, f)
         if f ~= token then return end
         callback(a, table.unpack(args))
         token = os.startTimer(time)
-      end)
+      end, this)
+      return { Token = token, Conn = conn }
+    end
+
+    function app:setTimeout(callback, time, this, ...)
+      local args = { ... }
+      local token = os.startTimer(time)
+      local conn = self:connect("timer", function(a, f)
+        if f ~= token then return end
+        callback(a, table.unpack(args))
+        self:disconnect(conn)
+      end, this)
       return { Token = token, Conn = conn }
     end
 
     function app:clearInterval(interval)
       os.cancelTimer(interval.Token)
       self:disconnect(interval.Conn)
+    end
+
+    function app:clearTimeout(...)
+      self:clearInterval(...)
     end
 
     function app:constructor() end
