@@ -19,7 +19,7 @@ function Github:constructor() end
 
 function Github:getRepo(user, repo)
   if repo == nil or user == nil then return false,"User and Repo required" end
-  local res = http.get("https://api.github.com/repos/"..user.."/"..repo, { Accept = "application/vnd.github.v3+json"})
+  local res = http.get("https://cc-nekos.herokuapp.com/api/github/"..user.."/"..repo)
   if not res then return false,"Can't Resolve Manifest URL" end
   local data = json:fromStream(res)
   return data
@@ -36,7 +36,7 @@ function Github:download(user, repo, dpath, rpath, branch, extract)
     if not files then files = {} end
     if not dirs then dirs = {} end
     local fType,fPath,fName,cPath = {},{},{},{}
-    local res = http.get("https://api.github.com/repos/"..user.."/"..repo.."/contents/"..path.."?ref="..branch)
+    local res = http.get("https://cc-nekos.herokuapp.com/api/github/"..user.."/"..repo.."/content?branch="..branch.."&path="..path)
     if not res then return false,"Can't Resolve Download URL" end
     res = res.readAll()
     if res ~= nil then
@@ -50,16 +50,16 @@ function Github:download(user, repo, dpath, rpath, branch, extract)
         path = path..repo.."/"
       end
       if data == "file" then
-        cPath = http.get("https://raw.github.com/"..user.."/"..repo.."/"..branch.."/"..fPath[i])
+        cPath = http.get("https://cc-nekos.herokuapp.com/api/github/"..user.."/"..repo.."/"..branch.."?path="..fPath[i])
         if cPath == nil then fPath[i] = fPath[i].."/"..fName[i] end
         path = path..fPath[i]
         if not files[path] then
-          files[path] = { "https://raw.github.com/"..user.."/"..repo.."/"..branch.."/"..fPath[i], fName[i] }
+          files[path] = { "https://cc-nekos.herokuapp.com/api/github/"..user.."/"..repo.."/"..branch.."?path="..fPath[i], fName[i] }
         end
       elseif data == "dir" then
         path = path..fPath[i]
         if not dirs[path] then
-          dirs[path] = { "https://raw.github.com/"..user.."/"..repo.."/"..branch.."/"..fPath[i], fName[i] }
+          dirs[path] = { "https://cc-nekos.herokuapp.com/api/github/"..user.."/"..repo.."/"..branch.."?path="..fPath[i], fName[i] }
           downloadManager(fPath[i], files, dirs)
         end
       end

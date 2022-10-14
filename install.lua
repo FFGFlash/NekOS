@@ -10,8 +10,8 @@ if http then
       if not files then files = {} end
       if not dirs then dirs = {} end
       local fType,fPath,fName,cPath = {},{},{},{}
-      local res = http.get("https://api.github.com/repos/"..user.."/"..repo.."/contents/"..path.."?ref="..branch)
-      if not res then return false,"Can't resolve URL" end
+      local res = http.get("https://cc-nekos.herokuapp.com/api/github/"..user.."/"..repo.."/content?branch="..branch.."&path="..path)
+      if not res then return false,"Can't Resolve Download URL" end
       res = res.readAll()
       if res ~= nil then
         for str in res:gmatch('"type":"(%w+)"') do table.insert(fType, str) end
@@ -24,16 +24,16 @@ if http then
           path = path..repo.."/"
         end
         if data == "file" then
-          cPath = http.get("https://raw.github.com/"..user.."/"..repo.."/"..branch.."/"..fPath[i])
+          cPath = http.get("https://cc-nekos.herokuapp.com/api/github/"..user.."/"..repo.."/"..branch.."?path="..fPath[i])
           if cPath == nil then fPath[i] = fPath[i].."/"..fName[i] end
           path = path..fPath[i]
           if not files[path] then
-            files[path] = { "https://raw.github.com/"..user.."/"..repo.."/"..branch.."/"..fPath[i], fName[i] }
+            files[path] = { "https://cc-nekos.herokuapp.com/api/github/"..user.."/"..repo.."/"..branch.."?path="..fPath[i], fName[i] }
           end
         elseif data == "dir" then
           path = path..fPath[i]
           if not dirs[path] then
-            dirs[path] = { "https://raw.github.com/"..user.."/"..repo.."/"..branch.."/"..fPath[i], fName[i] }
+            dirs[path] = { "https://cc-nekos.herokuapp.com/api/github/"..user.."/"..repo.."/"..branch.."?path="..fPath[i], fName[i] }
             downloadManager(fPath[i], files, dirs)
           end
         end
@@ -51,6 +51,7 @@ if http then
     end
 
     local res,err = downloadManager(rpath)
+    if not res then return res,err end
     for i,data in pairs(res.files) do downloadFile(i, table.unpack(data)) end
 
     return true
