@@ -17,9 +17,10 @@ return function(a)
   end
 
   function View:build()
+    self:handleResize()
     self.Completion = { List = {}, Index = 1 }
     self.Input = { Value = "", Index = 0, Line = #self.History + 1 }
-    self.Line = math.max(0, #self.History - height + 1)
+    self.Line = math.max(0, #self.History - self.Height + 1)
 
     term.setCursorBlink(true)
     term.setTextColor(system:getColor("nekos.text_color"))
@@ -35,8 +36,6 @@ return function(a)
     self:connect("print", self.handlePrint)
     self:connect("clear", self.handleClear)
     self:connect("term_resize", self.handleResize)
-
-    self:handleResize()
   end
 
   function View:draw()
