@@ -171,33 +171,39 @@ function App:install(user, repo)
   local descriptor, exists = self:getDescriptor(repo)
   if not exists then
     fs.delete("/Apps/"..repo)
-    return false, "Descriptor not found"
+    return false, "Descriptor Not Found"
   end
   self.Apps[repo] = { 1, 2, descriptor.hidden or false }
   self.Apps:save()
-  return true, "Successfully installed application"
+  return true, "Install Complete"
 end
 
 function App:uninstall(app)
   self.Apps[app] = nil
   self.Apps:save()
-  if not fs.exists("/Apps/"..app) then return false, "App doesn't exist" end
+  if not fs.exists("/Apps/"..app) then return false, "App Not Found" end
   fs.delete("/Apps/"..app)
-  return true, "Successfully uninstalled application"
+  return true, "Uninstall Complete"
+end
+
+function App:checkForUpdate(app)
+  local meta, exists = self:getMeta(app)
+  if not exists then return false, "App Not Found" end
+  local newMeta = github:getRepo(meta.owner.login, meta.name)
+  if meta.updated_at == newMeta.updated_at then return false, "No Update Found" end
+  return newMeta, "Found an Update"
 end
 
 function App:update(app)
-  local meta, exists = self:getMeta(app)
-  if not exists then return false, "App not found." end
-  local newMeta = github:getRepo(meta.owner.login, meta.name)
-  if meta.updated_at == newMeta.updated_at then return true, "App up to date." end
-  local s, e = self:install(meta.owner.login, meta.name)
-  return s, s and "Successfully updated application" or e
+  local update, e = self:checkForUpdate(app)
+  if not update then return false, e end
+  local s, e = self:install(update.owner.login, update.name)
+  return s, s and "Update Complete" or e
 end
 
 function App:run(app, ...)
   local descriptor, exists = self:getDescriptor(app)
-  if not exists then return false, "App not found." end
+  if not exists then return false, "App Not Found" end
   if not descriptor["local"] then
     local s, e = self:update(app)
     if not s then return false, e end

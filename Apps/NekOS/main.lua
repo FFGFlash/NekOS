@@ -10,7 +10,7 @@ function App:constructor(user)
   self:activate(not user.Username and "setup" or "login")
 end
 
-function App:activate(name)
+function App:activate(name, ...)
   term.setTextColor(system:getColor("nekos.text_color"))
   term.setBackgroundColor(system:getColor("nekos.background_color"))
 
@@ -20,8 +20,10 @@ function App:activate(name)
 
   if self.Views.List[name] then
     self.Views.Active = self.Views.List[name]
-    self.Views.Active:build()
+    self.Views.Active:build(...)
   end
+
+  return self.Views.Active
 end
 
 function App:draw()

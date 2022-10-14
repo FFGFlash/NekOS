@@ -115,7 +115,7 @@ return function(a, u)
     for name, data in pairs(app.Apps:raw()) do
       if not data[3] then
         local descriptor = app:getDescriptor(name)
-        local icon = "/NekOS/Apps/"..name.."/"..(descriptor.icon or "icon.nfp")
+        local icon = "/Apps/"..name.."/"..(descriptor.icon or "icon.nfp")
         local image = paintutils.loadImage(fs.exists(icon) and icon or system:get("nekos.missing_icon"))
         local x, y = math.clamp(data[1], 1, self.Width - 2), math.clamp(data[2], 2, self.Height - 2)
         paintutils.drawImage(image, x, y)
