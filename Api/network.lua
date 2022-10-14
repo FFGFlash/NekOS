@@ -100,6 +100,16 @@ function Network:constructor()
       return true, "Network Created Successfully"
     end
 
+    function network:handler(callback, this)
+      return function(sender, req, protocol)
+        if self:validate(protocol) then callback(this, sender, table.remove(req, 1), table.unpack(req)) end
+      end
+    end
+
+    function network:parse(req)
+      return table.remove(req, 1), req
+    end
+
     function network:validate(protocol)
       return protocol == self.Protocol
     end
