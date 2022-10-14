@@ -15,4 +15,5 @@ function Print:constructor()
   end
 end
 
+Print:call(...)
 return Print

@@ -125,6 +125,7 @@ function Api:__call(order, completion)
   end
 
   function api:printUsage()
+    print(self["__name__"])
     for i,usage in ipairs(self["__usage__"]) do
       print(self["__name__"].." "..usage)
     end
