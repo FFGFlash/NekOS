@@ -19,8 +19,8 @@ return function(a)
   function View:build()
     self:handleResize()
     self.Completion = { List = {}, Index = 1 }
-    self.Input = { Value = "", Index = 0 }
     self.Line = math.max(0, #self.History - self.Height + 1)
+    self.Input = { Value = "", Index = 0, Line = (#self.History + 1) - self.Line, Visible = true }
 
     term.setCursorBlink(true)
     term.setTextColor(system:getColor("nekos.text_color"))
@@ -51,9 +51,9 @@ return function(a)
       end
     end
 
-    local cmdLine = (#self.History + 1) - self.Line
-    if cmdLine > 0 and cmdLine <= self.Height then
-      term.setCursorPos(1, cmdLine)
+    term.setCursorBlink(self.Input.Visible)
+    if self.Input.Visible then
+      term.setCursorPos(1, self.Input.Line)
       term.clearLine()
       term.write("> ")
 
@@ -81,10 +81,17 @@ return function(a)
 
   function View:handleScroll(direction, x, y)
     self.Line = math.max(self.Line + direction, 0)
+    self:updateInputLine()
   end
 
   function View:resetScroll()
     self.Line = math.max(0, #self.History - self.Height + 1)
+    self:updateInputLine()
+  end
+
+  function View:updateInputLine()
+    self.Input.Line = (#self.History + 1) - self.Line
+    self.Input.Visible = self.Input.Line > 0 and self.Input.Line <= self.Height
   end
 
   function View:moveCursor(c)
