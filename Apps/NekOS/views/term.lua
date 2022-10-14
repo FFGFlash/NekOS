@@ -147,8 +147,7 @@ return function(a)
     self:resetScroll()
     self.Completion = { List = {}, Index = 1 }
     self.Input.Index = 0
-    local w, h = term.getSize()
-    if self.Input.Line + 1 > h then self:scroll(1) end
+    if self.Input.Line + 1 > self.Height then self:handleScroll(1) end
     self:draw()
     term.setCursorBlink(false)
     term.setCursorPos(1, self.Input.Line + 1)
