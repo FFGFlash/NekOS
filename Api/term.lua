@@ -6,11 +6,25 @@ function term.getHeight()
   return { term.getSize() }[2]
 end
 
+function term.getCursorX()
+  return { term.getCursorPos() }[1]
+end
+
+function term.getCursorY()
+  return { term.getCursorPos() }[2]
+end
+
 function term.writeCentered(t, w, h)
   local x, y, W, H = term.getCursorPos(), term.getSize()
   w, h = w or W, h or H
   term.setCursorPos((x - 1) + (w - string.len(t)) / 2, (y - 1) + h / 2)
   term.write(t)
+end
+
+function term.writeNewline(t, r)
+  local x,y = term.getCursorPos()
+  term.write(t)
+  term.setCursorPos(r and 1 or x,y + 1)
 end
 
 function term.table(t, w, s)
