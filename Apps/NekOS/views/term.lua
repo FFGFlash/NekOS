@@ -19,7 +19,7 @@ return function(a)
   function View:build()
     self:handleResize()
     self.Completion = { List = {}, Index = 1 }
-    self.Input = { Value = "", Index = 0, Line = #self.History + 1 }
+    self.Input = { Value = "", Index = 0 }
     self.Line = math.max(0, #self.History - self.Height + 1)
 
     term.setCursorBlink(true)
@@ -51,7 +51,7 @@ return function(a)
       end
     end
 
-    local cmdLine = self.Input.Line - self.Line
+    local cmdLine = (#self.History + 1) - self.Line
     if cmdLine > 0 and cmdLine <= self.Height then
       term.setCursorPos(1, cmdLine)
       term.clearLine()
@@ -147,13 +147,11 @@ return function(a)
     self:resetScroll()
     self.Completion = { List = {}, Index = 1 }
     self.Input.Index = 0
-    if self.Input.Line + 1 > self.Height then self:handleScroll(1) end
+    if self.Line + 1 > self.Height then self:handleScroll(1) end
     self:draw()
     term.setCursorBlink(false)
-    term.setCursorPos(1, self.Input.Line + 1)
     shell.run(self.Input.Value)
     self.Input.Value = ""
-    _, self.Input.Line = term.getCursorPos()
     term.setCursorBlink(true)
   end
 
