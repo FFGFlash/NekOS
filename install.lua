@@ -56,7 +56,7 @@ if http then
     return true
   end
 
-  local res,err = download("FFGFlash", "NekOS", "/")
+  local res,err = download("FFGFlash", "NekOS", "/", nil, nil, true)
   if not res then return print(err) end
   os.reboot()
 else
