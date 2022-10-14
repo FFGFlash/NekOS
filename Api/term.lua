@@ -28,6 +28,7 @@ function term.table(t, w, s)
       end
     end
   end
+  return cw, ch
 end
 
 return term
