@@ -221,7 +221,6 @@ function App:run(app, ...)
   if not exists then return false, "App Not Found" end
   if not descriptor["local"] then
     local s, e = self:update(app)
-    if not s then return false, e end
     descriptor()
   end
   local name = string.match(fs.getName(descriptor.main), "([^\.]+)")
