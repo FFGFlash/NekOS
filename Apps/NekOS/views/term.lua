@@ -132,7 +132,6 @@ return function(a)
 
   function View:handleInput(c)
     if not c then return
-    self:resetScroll()
     elseif type(c) == "number" then
       local p = self.Input.Index + c
       self.Input.Value = string.sub(self.Input.Value, 1, p - 1)..string.sub(self.Input.Value, p + 1, -1)
@@ -148,6 +147,7 @@ return function(a)
     else
       self.Completion = { List = {}, Index = 1 }
     end
+    self:resetScroll()
   end
 
   function View:processInput()
@@ -157,6 +157,8 @@ return function(a)
     if self.Line + 1 > self.Height then self:handleScroll(1) end
     self:draw()
     term.setCursorBlink(false)
+    term.clearLine()
+    print("> "..self.Input.Value)
     shell.run(self.Input.Value)
     self.Input.Value = ""
     term.setCursorBlink(true)
