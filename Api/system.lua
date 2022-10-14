@@ -126,7 +126,7 @@ function System:reset()
 end
 
 function System:install()
-  local s, e = github:download("FFGFlash", "NekOS", "/")
+  local s, e = github:download("FFGFlash", "NekOS", "/", nil, nil, true)
   return s, s and "System installed" or e
 end
 

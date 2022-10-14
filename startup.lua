@@ -22,7 +22,7 @@ end
 sleep(1)
 
 if system:get("nekos.auto_update") then
-  local s,e = true, "Updating..."
+  local s,e = true, "Updating"
   term.setCursorPos(math.floor((w - string.len(e)) / 2), math.floor(h / 2 + 2))
   term.clearLine()
   term.write(e)
