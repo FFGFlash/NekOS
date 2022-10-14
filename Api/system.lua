@@ -2,6 +2,10 @@ function Completions.path(text, space)
   return Completions.choice(text, system:getPath(), space)
 end
 
+function Completions.startup(text, space)
+  return Completions.choice(text, system:getStartup(), space)
+end
+
 local System = api(2, {
   {
     type = "choice",
@@ -34,6 +38,17 @@ local System = api(2, {
           },
           remove = {
             { type = "path", name = "path", required = true }
+          }
+        } }
+      },
+      startup = {
+        { type = "choice", options = {
+          get = {},
+          add = {
+            { name = "command", required = true }
+          },
+          remove = {
+            { type = "startup", name = "command", required = true }
           }
         } }
       }
@@ -137,6 +152,31 @@ function System:update()
   if manifest.updated_at == newManifest.updated_at then return false, "System up to date" end
   local s, e = self:install()
   return s, s and "System updated" or e
+end
+
+function System:startup()
+  local s = self:getStartup()
+  for i,c in ipairs(s) do shell.openTab(c) end
+end
+
+function System:getStartup()
+  return self:load(".startup")
+end
+
+function System:addStartup(command, index)
+  local s = self:getStartup()
+  table.insert(s, index, command)
+  local s, e = s:save()
+  return s, s and "Successfully added startup command" or e
+end
+
+function System:removeStartup(command)
+  local s = self:getStartup()
+  local index = table.find(s, command)
+  if not index then return false, "Command not found" end
+  table.remove(s, index)
+  local s, e = s:save()
+  return s, s and "Successfully removed startup command" or e
 end
 
 function System:getPath()

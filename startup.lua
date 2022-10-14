@@ -43,5 +43,7 @@ end
 term.clear()
 term.setCursorPos(1, 1)
 
+system:startup()
+
 local user = system:getUser()
 app:run("NekOS", user)
