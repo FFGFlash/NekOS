@@ -19,19 +19,6 @@ for i = 1, string.len(l) do
   sleep(1 / 5)
 end
 
-local p = peripheral.find("modem")
-local v = os.getComputerID()
-if not p or not p.isWireless() then
-  local e = "Please attach a wireless modem."
-  term.setCursorPos(math.floor((w - string.len(e)) / 2), math.floor(h / 2 + 2))
-  term.clearLine()
-  term.write(e)
-  sleep(3)
-  os.shutdown()
-end
-if not p.isOpen(v) then p.open(v) end
-if not p.isOpen(65535) then p.open(65535) end
-
 sleep(1)
 
 if system:get("nekos.auto_update") then

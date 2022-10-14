@@ -116,7 +116,7 @@ function Api:__call(order, completion)
   }
 
   function api:__call(...)
-    return self:constructor(...) or self
+    return self, self:constructor(...)
   end
 
   function api:printUsage()
