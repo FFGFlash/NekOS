@@ -20,13 +20,13 @@ function Github:constructor() end
 function Github:getRepo(user, repo)
   if repo == nil or user == nil then return false,"User and Repo required" end
   local res = http.get("https://api.github.com/repos/"..user.."/"..repo, { Accept = "application/vnd.github.v3+json"})
-  if not res then return false,"Can't resolve URL" end
+  if not res then return false,"Can't Resolve Manifest URL" end
   local data = json:fromStream(res)
   return data
 end
 
 function Github:download(user, repo, dpath, rpath, branch, extract)
-  if repo == nil or user == nil then return false,"User and Repo required" end
+  if repo == nil or user == nil then return false,"User and Repo Required" end
   if rpath == nil then rpath = "" end
   if dpath == nil then dpath = "/Downloads/" end
   if branch == nil then branch = "main" end
@@ -37,7 +37,7 @@ function Github:download(user, repo, dpath, rpath, branch, extract)
     if not dirs then dirs = {} end
     local fType,fPath,fName,cPath = {},{},{},{}
     local res = http.get("https://api.github.com/repos/"..user.."/"..repo.."/contents/"..path.."?ref="..branch)
-    if not res then return false,"Can't resolve URL" end
+    if not res then return false,"Can't Resolve Download URL" end
     res = res.readAll()
     if res ~= nil then
       for str in res:gmatch('"type":"(%w+)"') do table.insert(fType, str) end
