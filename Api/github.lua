@@ -81,7 +81,11 @@ function Github:download(user, repo, dpath, rpath, branch, extract)
   for i,data in pairs(res.files) do downloadFile(i, table.unpack(data)) end
 
   local meta = self:getRepo(user, repo)
-  local metaFile = fs.open(dpath.."/"..repo.."/.manifest","w")
+  local metaPath = dpath.."/"
+  if not extract then
+    metaPath = metaPath..repo.."/"
+  end
+  local metaFile = fs.open(metaPath..".manifest", "w")
   metaFile.write(json:stringify(meta, true))
   metaFile.close()
 
