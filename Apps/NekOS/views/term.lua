@@ -52,7 +52,7 @@ return function(a)
     end
 
     local cmdLine = self.Input.Line - self.Line
-    if cmdLine > 0 and cmdLine <= height then
+    if cmdLine > 0 and cmdLine <= self.Height then
       term.setCursorPos(1, cmdLine)
       term.clearLine()
       term.write("> ")
