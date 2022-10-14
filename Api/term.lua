@@ -1,17 +1,21 @@
 function term.getWidth()
-  return { term.getSize() }[1]
+  local size = { term.getSize() }
+  return size[1]
 end
 
 function term.getHeight()
-  return { term.getSize() }[2]
+  local size = { term.getSize() }
+  return size[2]
 end
 
 function term.getCursorX()
-  return { term.getCursorPos() }[1]
+  local pos = { term.getCursorPos() }
+  return pos[1]
 end
 
 function term.getCursorY()
-  return { term.getCursorPos() }[2]
+  local pos = { term.getCursorPos() }
+  return pos[2]
 end
 
 function term.writeCentered(t, w, h)
