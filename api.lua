@@ -10,9 +10,9 @@ Api.__index = Api
 
 function Api:load()
   local apis = {}
-  for i,file in ipairs(fs.list("/NekOS/Api/")) do
+  for i,file in ipairs(fs.list("/Api/")) do
     local name = string.match(fs.getName(file), "([^\.]+)")
-    local api = require("/NekOS/Api/"..name)
+    local api = require("/Api/"..name)
     if type(api) ~= "table" or api["__order__"] == nil then
       _G[name] = api
     else
@@ -24,7 +24,7 @@ function Api:load()
   end) do
     _G[name] = api()
   end
-  system:addPath("/NekOS/Api", 2)
+  system:addPath("/Api", 2)
 end
 
 function Api:buildCompletions(tree)

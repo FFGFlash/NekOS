@@ -83,12 +83,12 @@ function System:execute(action, ...)
 end
 
 function System:constructor()
-  self.Data = data("/NekOS")
+  self.Data = data("/")
 
   self:define("nekos.initialized", { description="Determines if the system is initialized.", default=false, type="boolean" })
   self:define("nekos.auto_update", { description="Determines if the system should auto update.", default=true, type="boolean" })
 
-  self:define("nekos.missing_icon", { description="Path to the fallback icon for applications.", default="/NekOS/Images/missing.nfp", type="string" })
+  self:define("nekos.missing_icon", { description="Path to the fallback icon for applications.", default="/Images/missing.nfp", type="string" })
 
   self:define("nekos.text_color", { description="System text color.", default="white", type="string" })
   self:define("nekos.background_color", { description="System background color.", default="gray", type="string" })
@@ -175,7 +175,7 @@ function System:set(key, value)
   if key then
     settings.set(key, value)
   end
-  settings.save("/NekOS/.settings")
+  settings.save("/.settings")
   return true
 end
 
@@ -185,7 +185,7 @@ function System:info(key)
 end
 
 function System:get(key)
-  settings.load("/NekOS/.settings")
+  settings.load("/.settings")
   if key then
     return settings.get(key)
   end

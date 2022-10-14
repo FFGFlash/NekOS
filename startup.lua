@@ -3,7 +3,7 @@ os.pullEvent = os.pullEventRaw
 term.clear()
 term.setCursorPos(1, 1)
 
-_G.api = require("/NekOS/api")
+_G.api = require("/api")
 api:load()
 
 local c, t, w, h = 0, 0, term.getSize()

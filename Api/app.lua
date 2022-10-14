@@ -40,12 +40,12 @@ function App:execute(action, ...)
 end
 
 function App:constructor()
-  self.Data = data("/NekOS/Apps")
+  self.Data = data("/Apps")
   self.Instances = {}
   self.Apps = system:load(".apps")
 
-  if not fs.exists("/NekOS/Apps") then
-    fs.mkdir("/NekOS/Apps")
+  if not fs.exists("/Apps") then
+    fs.mkdir("/Apps")
   end
 
   for _, app in ipairs(self:getApps()) do
@@ -65,7 +65,7 @@ function App:constructor()
     app.__index = app
 
     function app:__call(id, ...)
-      local inst = setmetatable({ Id = id, Path = "/NekOS/Apps/"..id, EventHandler = events(), Data = data("/NekOS/AppData/"..id) }, self)
+      local inst = setmetatable({ Id = id, Path = "/Apps/"..id, EventHandler = events(), Data = data("/AppData/"..id) }, self)
       inst:connect("terminate", inst.stop)
       inst:constructor(...)
       return inst
@@ -154,7 +154,7 @@ function App:require(path)
 end
 
 function App:getApps()
-  return fs.dirs("/NekOS/Apps")
+  return fs.dirs("/Apps")
 end
 
 function App:getMeta(app)
@@ -166,11 +166,11 @@ function App:getDescriptor(app)
 end
 
 function App:install(user, repo)
-  local s, e = github:download(user, repo, "/NekOS/Apps/")
+  local s, e = github:download(user, repo, "/Apps/")
   if not s then return false, e end
   local descriptor, exists = self:getDescriptor(repo)
   if not exists then
-    fs.delete("/NekOS/Apps/"..repo)
+    fs.delete("/Apps/"..repo)
     return false, "Descriptor not found"
   end
   self.Apps[repo] = { 1, 2, descriptor.hidden or false }
@@ -181,8 +181,8 @@ end
 function App:uninstall(app)
   self.Apps[app] = nil
   self.Apps:save()
-  if not fs.exists("/NekOS/Apps/"..app) then return false, "App doesn't exist" end
-  fs.delete("/NekOS/Apps/"..app)
+  if not fs.exists("/Apps/"..app) then return false, "App doesn't exist" end
+  fs.delete("/Apps/"..app)
   return true, "Successfully uninstalled application"
 end
 
