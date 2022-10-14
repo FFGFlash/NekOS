@@ -70,26 +70,6 @@ return function(a, u)
       self.Input.Value = string.sub(self.Input.Value, 1, self.Input.Index)..c..string.sub(self.Input.Value, self.Input.Index + 1, -1)
       self:moveCursor(string.len(c))
     end
-    if system:get("shell.autocomplete") then
-      self:fetchShellCompletions()
-    else
-      self.Completion = { List = {}, Index = 1 }
-    end
-    self:resetScroll()
-  end
-
-  function View:processInput()
-    self:resetScroll()
-    self.Completion = { List = {}, Index = 1 }
-    self.Input.Index = 0
-    if self.Line + 1 > self.Height then self:handleScroll(1) end
-    self:draw()
-    term.setCursorBlink(false)
-    term.clearLine()
-    print("> "..self.Input.Value)
-    shell.run(self.Input.Value)
-    self.Input.Value = ""
-    term.setCursorBlink(true)
   end
 
   function View.checkBB(x1, y1, x2, y2, x, y)
