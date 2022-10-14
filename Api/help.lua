@@ -1,5 +1,5 @@
 local Help = api(0, {
-  { type = "api", name = "api" }
+  { type = "api", name = "program" }
 })
 
 function Help:execute(program, ...)
@@ -9,8 +9,13 @@ function Help:execute(program, ...)
       program:printUsage()
     end
   else
-    local program = api.List[program]
-    program:printUsage()
+    program = api.List[program]
+    if not program then
+      print("Unknown Program")
+      self:execute()
+    else
+      program:printUsage()
+    end
   end
 end
 
