@@ -1,11 +1,15 @@
 _G.Completions = require("cc.completion")
 
+function Completions.api(text, space)
+  return Completions.choice(text, table.keys(api.List), space)
+end
+
 function table.combine(t, o)
   for i,v in ipairs(o) do table.insert(t, v) end
   return t
 end
 
-local Api = {}
+local Api = { List = {} }
 Api.__index = Api
 
 function Api:load()
@@ -23,6 +27,7 @@ function Api:load()
     return a["__order__"] < b["__order__"]
   end) do
     _G[name] = api()
+    self.List[name] = _G[name]
   end
   system:addPath("/Api", 2)
 end
