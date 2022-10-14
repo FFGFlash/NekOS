@@ -1,5 +1,5 @@
 local Md5 = api(0, {
-  { name = "string..." }
+  { name = "...string" }
 })
 
 function Md5:execute(...)
