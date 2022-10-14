@@ -13,4 +13,12 @@ function string.split(s, d)
   return a
 end
 
+function string.remove(s, i)
+  return string.sub(s, 1, i - 1)..string.sub(s, i + 1, -1)
+end
+
+function string.insert(s, i, c)
+  return string.sub(s, 1, i)..c..string.sub(s, i + 1, -1)
+end
+
 return string
