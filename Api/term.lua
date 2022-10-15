@@ -28,7 +28,7 @@ function term.writeCentered(t, w, h)
 end
 
 function term.writeNewline(t, r)
-  local x,y = term.getCursorPos()
+  local x, y = term.getCursorPos()
   term.write(t)
   term.setCursorPos(r and 1 or x,y + 1)
 end
