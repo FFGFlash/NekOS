@@ -34,8 +34,9 @@ function term.writeNewline(t, r)
 end
 
 function term.table(t, w, s)
-  local x, y, W = term.getCursorPos(), term.getWidth()
-  w, s = w or W, s or 0
+  local x, y = term.getCursorPos()
+  w = w or term.getWidth()
+  s = s or 0
   local R, C = #t, 0
   for r = 1, R, 1 do C = math.max(C, #t[r]) end
   local cw, ch = w / C, 1 + s
