@@ -147,6 +147,7 @@ function Api:__call(order, completion)
         a[i] = nil
       end
     end
+    sleep(1)
     local name = string.match(fs.getName(shell.getRunningProgram()), "([^\.]+)")
     self.execute(_G[name], ...)
   end

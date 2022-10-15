@@ -225,7 +225,7 @@ function App:run(app, ...)
   end
   local name = string.match(fs.getName(descriptor.main), "([^\.]+)")
   local app = self:require(app.."/"..name)(app, ...)
-  return app:start() or true
+  return app:start() or true, "App Running"
 end
 
 App:call(...)

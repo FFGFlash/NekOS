@@ -75,6 +75,12 @@ return function(a)
   end
 
   function View:handlePrint(text)
+    if not text then
+      repeat
+        table.insert(self.History, string.sub(text, 1, self.Width))
+        text = string.sub(text, self.Width + 1, -1)
+      until string.len(text) <= self.Width
+    end
     table.insert(self.History, text)
     self:resetScroll()
   end
