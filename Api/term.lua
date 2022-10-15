@@ -19,8 +19,10 @@ function term.getCursorY()
 end
 
 function term.writeCentered(t, w, h)
-  local x, y, W, H = term.getCursorPos(), term.getSize()
-  w, h = w or W, h or H
+  local x, y = term.getCursorPos()
+  local W, H = term.getSize()
+  w = w or W
+  h = h or H
   term.setCursorPos((x - 1) + (w - string.len(t)) / 2, (y - 1) + h / 2)
   term.write(t)
 end
