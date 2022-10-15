@@ -75,7 +75,7 @@ return function(a)
   end
 
   function View:handlePrint(text)
-    if not text then
+    if text then
       repeat
         table.insert(self.History, string.sub(text, 1, self.Width))
         text = string.sub(text, self.Width + 1, -1)
