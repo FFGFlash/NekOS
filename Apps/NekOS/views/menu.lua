@@ -46,7 +46,7 @@ return function(a, u)
       if not data[3] then
         local x, y = math.clamp(data[1], 1, self.Width - 2), math.clamp(data[2], 2, self.Height - 2)
         if self.checkBB(x, y, x + 3, y + 3, mx, my) then
-          local i = shell.openTab("app run", name, "--focus")
+          multishell.launch({ ["shell"] = shell, ["multishell"] = multishell }, "/Api/app.lua", "run", name, "--focus")
           return
         end
       end

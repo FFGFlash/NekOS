@@ -159,11 +159,13 @@ function Api:__call(order, completion)
         table.insert(args["_"], arg)
       end
     end
+    local name = shell.getRunningProgram()
     if args["--focus"] then
       local id = multishell.getCurrent()
       multishell.setFocus(id)
+      name = multishell.getTitle(id)
     end
-    local name = string.match(fs.getName(shell.getRunningProgram()), "([^\.]+)")
+    name = string.match(fs.getName(name), "([^\.]+)")
     self.execute(_G[name], args, table.unpack(args["_"]))
   end
 
