@@ -101,8 +101,9 @@ function Network:constructor()
     end
 
     function network:handler(callback, this)
+      local _self = self
       return function(sender, req, protocol)
-        if self:validate(protocol) then callback(this, sender, table.remove(req, 1), table.unpack(req)) end
+        if _self:validate(protocol) then callback(this, sender, table.remove(req, 1), table.unpack(req)) end
       end
     end
 
