@@ -46,7 +46,7 @@ local Network = api(0, {
   }
 })
 
-function Network:execute(action, ...)
+function Network:execute(args, action, ...)
   local args = { ... }
   local s, e = false, "Invalid Action"
   if action == "lookup" then

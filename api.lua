@@ -135,21 +135,36 @@ function Api:__call(order, completion)
   function api:constructor() end
 
   function api:call(...)
-    local a = {...}
-    if a[1] and a[2] and fs.getName(a[1]..".lua") == fs.getName(a[2]) then
-      self["__name__"] = string.match(fs.getName(a[2]), "([^\.]+)")
+    local argv = {...}
+    if argv[1] and argv[2] and fs.getName(argv[1]..".lua") == fs.getName(argv[2]) then
+      self["__name__"] = string.match(fs.getName(argv[2]), "([^\.]+)")
       if not self["__completion__"] then return end
-      shell.setCompletionFunction(a[2], self["__completion__"])
+      shell.setCompletionFunction(argv[2], self["__completion__"])
       return
     end
-    for i=1,#a,1 do
-      if a[i] == "." then
-        a[i] = nil
+    local args = { ["_"] = {} }
+    for i=1,#argv,1 do
+      local arg = argv[i]
+      if arg == "." then arg = nil end
+      if string.startsWith(arg, "--") then
+        local nxt = argv[i + 1]
+        if nxt and not string.startsWith(nxt, "--") then
+          if nxt == "." then nxt = nil end
+          args[arg] = nxt
+          i = i + 1
+        else
+          args[arg] = true
+        end
+      else
+        table.insert(args["_"], arg)
       end
     end
-    sleep(1)
+    if args["--focus"] then
+      local id = multishell.getCurrent()
+      multishell.setFocus(id)
+    end
     local name = string.match(fs.getName(shell.getRunningProgram()), "([^\.]+)")
-    self.execute(_G[name], ...)
+    self.execute(_G[name], args, table.unpack(args["_"]))
   end
 
   return setmetatable(api, api)

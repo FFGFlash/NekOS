@@ -164,6 +164,8 @@ return function(a)
     self:draw()
     term.setCursorBlink(false)
     term.clearLine()
+    term.setCursorPos(1, term.getCursorY())
+    term.setTextColor(system:getColor("nekos.text_color"))
     print("> "..self.Input.Value)
     shell.run(self.Input.Value)
     self.Input.Value = ""

@@ -2,7 +2,7 @@ local Print = api(0, {
   { name = "...text" }
 })
 
-function Print:execute(...)
+function Print:execute(args, ...)
   local args = { ... }
   self(table.concat(args, " "))
 end

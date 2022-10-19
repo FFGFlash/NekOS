@@ -7,7 +7,7 @@ local Github = api(2, {
   }
 })
 
-function Github:execute(action, ...)
+function Github:execute(args, action, ...)
   local res,err = false,"Usage: github download <user> <repo> [download path] [remote path] [branch]"
   if action == "download" then
     res,err = self.download(...)

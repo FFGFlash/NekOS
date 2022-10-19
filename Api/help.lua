@@ -2,7 +2,7 @@ local Help = api(0, {
   { type = "api", name = "program" }
 })
 
-function Help:execute(program, ...)
+function Help:execute(args, program, ...)
   if not program then
     print("Welcome to NekOS")
     for name,program in pairs(api.List) do
@@ -12,7 +12,7 @@ function Help:execute(program, ...)
     program = api.List[program]
     if not program then
       print("Unknown Program")
-      self:execute()
+      self:execute(args)
     else
       program:printUsage()
     end

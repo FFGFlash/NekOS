@@ -2,7 +2,7 @@ local Md5 = api(0, {
   { name = "...string" }
 })
 
-function Md5:execute(...)
+function Md5:execute(args, ...)
   local string = table.concat({...}, " ")
   if #string > 0 then
     print(self:hash(string))

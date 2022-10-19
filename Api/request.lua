@@ -10,7 +10,7 @@ local Request = api(0, {{
   }
 }})
 
-function Request:execute(action, ...)
+function Request:execute(args, action, ...)
   local s, e = false, "Invalid Action"
   if action == "post" then
     s, e = self:post(...)

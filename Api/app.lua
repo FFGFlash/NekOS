@@ -22,7 +22,7 @@ local App = api(2, {{
   }
 }})
 
-function App:execute(action, ...)
+function App:execute(args, action, ...)
   local s, e = false, "Invalid Action"
   if action == "install" then
     s, e = self:install(...)

@@ -56,33 +56,33 @@ local System = api(2, {
   }
 })
 
-function System:execute(action, ...)
-  local args = {...}
+function System:execute(args, action, ...)
+  local a = {...}
   local s, e = false, "Invalid Action"
   if action == "settings" then
-    local subaction = table.remove(args, 1)
+    local subaction = table.remove(a, 1)
     if subaction == "get" then
-      s, e = self:get(table.unpack(args))
+      s, e = self:get(table.unpack(a))
     elseif subaction == "set" then
-      s, e = self:set(table.unpack(args))
+      s, e = self:set(table.unpack(a))
     elseif subaction == "info" then
-      s, e = self:info(table.unpack(args))
+      s, e = self:info(table.unpack(a))
       if s then
         print(string.format("Type: %s Default: %s Value: %s\n%s", s.type, tostring(s.default), tostring(s.value), s.description))
         return
       end
     end
   elseif action == "path" then
-    local subaction = table.remove(args, 1)
+    local subaction = table.remove(a, 1)
     if subaction == "get" then
       print(table.concat(self:getPath(), ":"))
       return
     elseif subaction == "set" then
-      s, e = self:setPath(table.unpack(args))
+      s, e = self:setPath(table.unpack(a))
     elseif subaction == "add" then
-      s, e = self:addPath(table.unpack(args))
+      s, e = self:addPath(table.unpack(a))
     elseif subaction == "remove" then
-      s, e = self:removePath(table.unpack(args))
+      s, e = self:removePath(table.unpack(a))
     end
   elseif action == "install" then
     s, e = self:install()
