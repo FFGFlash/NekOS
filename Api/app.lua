@@ -22,16 +22,16 @@ local App = api(2, {{
   }
 }})
 
-function App:execute(args, action, ...)
+function App:execute(args, action, app, ...)
   local s, e = false, "Invalid Action"
   if action == "install" then
-    s, e = self:install(...)
+    s, e = self:install(app, ...)
   elseif action == "uninstall" then
-    s, e = self:uninstall(...)
+    s, e = self:uninstall(app, ...)
   elseif action == "update" then
-    s, e = self:update(...)
+    s, e = self:update(app, ...)
   elseif action == "run" then
-    s, e = self:run(...)
+    s, e = self:run(app, args, ...)
   end
   print(e)
   if not s then
@@ -216,7 +216,7 @@ function App:update(app)
   return s, s and "Update Complete" or e
 end
 
-function App:run(app, ...)
+function App:run(app, args, ...)
   local descriptor, exists = self:getDescriptor(app)
   if not exists then return false, "App Not Found" end
   if not descriptor["local"] then
@@ -224,7 +224,7 @@ function App:run(app, ...)
     descriptor()
   end
   local name = string.match(fs.getName(descriptor.main), "([^\.]+)")
-  local app = self:require(app.."/"..name)(app, ...)
+  local app = self:require(app.."/"..name)(app, args, ...)
   return app:start() or true, "App Running"
 end
 
