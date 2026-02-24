@@ -108,7 +108,7 @@ end
 local OS_FILES = {
   -- core
   { src = "startup.lua",                   dst = "/startup.lua" },
-  { src = "os/init.lua",                   dst = "/os/init.lua" },
+  { src = "os/boot.lua",                   dst = "/os/boot.lua" },
   { src = "os/kernel.lua",                 dst = "/os/kernel.lua" },
   { src = "os/caps.lua",                   dst = "/os/caps.lua" },
   { src = "os/loader.lua",                 dst = "/os/loader.lua" },
