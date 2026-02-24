@@ -41,6 +41,8 @@ function kernel.boot()
 end
 
 function kernel.spawnApp(name, path, requestedCaps, version, args)
+  print(path)
+
   local caps_mod = kernel._caps_mod
   local loader = kernel._loader
 

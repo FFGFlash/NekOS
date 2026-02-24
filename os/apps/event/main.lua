@@ -33,9 +33,6 @@ local function dispatch(eventName, args)
 end
 
 function main()
-  local k = require("kernel")
-  k.registerService("event", "1.0.0", __kernel.pid)
-
   while true do
     local ev = table.pack(native.coroutine.yield(nil))
     local evName = ev[1]
