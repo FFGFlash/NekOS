@@ -1,0 +1,5 @@
+{
+  "name": "fs",
+  "version": "0.1.0",
+  "capabilities": ["native"]
+}
