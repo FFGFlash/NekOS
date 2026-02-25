@@ -133,7 +133,7 @@ local function installFromSource(branch)
   local failed    = 0
 
   for _, entry in ipairs(OS_FILES) do
-    local url         = base .. "/" .. entry.src
+    local url         = base .. "/" .. entry.src .. "?ts=" .. os.epoch()
     local body, dlErr = get(url)
     if not body then
       warn("Failed " .. entry.src .. ": " .. tostring(dlErr))
