@@ -17,7 +17,7 @@ local function fail(msg) log("  [xx] " .. msg, colors.red) end
 
 local function get(url)
   info("GET " .. url)
-  local r = http.get(url, { ["User-Agent"] = UA })
+  local r = http.get(url .. "?ts=" .. os.epoch(), { ["User-Agent"] = UA })
   if not r then return nil, "request failed" end
   local code = r.getResponseCode()
   local body = r.readAll()
@@ -133,7 +133,7 @@ local function installFromSource(branch)
   local failed    = 0
 
   for _, entry in ipairs(OS_FILES) do
-    local url         = base .. "/" .. entry.src .. "?ts=" .. os.epoch()
+    local url         = base .. "/" .. entry.src
     local body, dlErr = get(url)
     if not body then
       warn("Failed " .. entry.src .. ": " .. tostring(dlErr))
