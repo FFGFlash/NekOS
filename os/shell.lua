@@ -251,7 +251,7 @@ function main()
   println("╔══════════════════════════════╗")
   println("║  NekOS v1.0  microkernel OS  ║")
   println("╚══════════════════════════════╝")
-  color(colors.grey)
+  color(colors.gray)
   println("Capabilities are apps. Type 'help'.")
   reset(); println("")
 

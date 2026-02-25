@@ -69,6 +69,8 @@ loader.SAFE_GLOBALS = {
   utf8 = utf8,
   textutils = textutils,
   keys = keys,
+  colors = colors,
+  colours = colours,
 }
 
 return loader
