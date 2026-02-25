@@ -2,50 +2,190 @@ function main()
   display.clear()
   display.setCursorPos(1, 1)
 
+  local W, H = display.getSize()
+  local VIEW_H = H - 1
+
+  local lines = {}
+  local scroll = 0
+  local curLine = ""
+  local curFg = colors.white
+
+  local history = {}
+
+  local function maxScroll()
+    return math.max(0, #lines - VIEW_H)
+  end
+
+  local function flushLine()
+    local text = curLine
+    curLine = ""
+    if text == "" then
+      lines[#lines + 1] = { text = "", fg = curFg }
+      return
+    end
+    while #text > 0 do
+      lines[#lines + 1] = { text = text:sub(1, W), fg = curFg }
+      text = text:sub(W + 1)
+    end
+  end
+
+  local function redraw(inputStr)
+    inputStr = inputStr or ""
+
+    local total = #lines
+    local bottom = total - scroll
+    local top = bottom - VIEW_H + 1
+
+    display.setCursorBlink(false)
+
+    for row = 1, VIEW_H do
+      local idx = top + row - 1
+      display.setCursorPos(1, row)
+      display.clearLine()
+      if idx >= 1 and idx <= total then
+        local entry = lines[idx]
+        display.setTextColor(entry.fg)
+        display.write(entry.text)
+      end
+    end
+
+    display.setCursorPos(1, H)
+    display.clearLine()
+
+    local indicatorWidth = 0
+    if scroll > 0 then
+      local indicator = " ↑" .. scroll
+      indicatorWidth = #indicator
+      display.setCursorPos(W - indicatorWidth + 1, H)
+      display.setTextColor(colors.gray)
+      display.write(indicator)
+    end
+
+    display.setCursorPos(1, H)
+    display.setTextColor(colors.lime)
+    display.write("NekOS> ")
+
+    local maxInput = W - 6 - indicatorWidth
+    local displayInput = inputStr
+    if #displayInput > maxInput then
+      displayInput = displayInput:sub(-maxInput)
+    end
+    display.setTextColor(colors.white)
+    display.write(displayInput)
+
+    display.setCursorPos(7 + #displayInput, H)
+    display.setCursorBlink(true)
+    display.setTextColor(colors.white)
+  end
+
   local function cls()
     display.clear(); display.setCursorPos(1, 1)
   end
 
-  local function color(c) display.setTextColor(c) end
-  local function reset() color(colors.white) end
+  local function color(c) curFg = c end
+  local function reset() curFg = colors.white end
 
-  local function println(...)
-    local parts = {}
-    for i = 1, select("#", ...) do parts[i] = tostring(select(i, ...)) end
-    local _, cy = display.getCursorPos()
-    display.write(table.concat(parts, " "))
-    display.setCursorPos(1, cy + 1)
+  local function write(text, fg)
+    if fg then curFg = fg end
+    curLine = curLine .. tostring(text)
   end
 
-  local function prompt()
-    color(colors.lime); display.write("NekOS> "); reset()
+  local function println(text, fg)
+    if fg then curFg = fg end
+    local str = tostring(text or "")
+    local first = true
+    for segment in (str .. "\n"):gmatch("([^\n]*)\n") do
+      if not first then flushLine() end
+      first = false
+      curLine = curLine .. segment
+    end
+    flushLine()
+    if scroll == 0 then redraw() end
+  end
+
+  local function scrollUp(n)
+    scroll = math.min(maxScroll(), scroll + (n or 1))
+    redraw()
+  end
+
+  local function scrollDown(n)
+    scroll = math.max(0, scroll - (n or 1))
+    redraw()
+  end
+
+  local function scrollToBottom()
+    scroll = 0
+    redraw()
+  end
+
+  local function cls()
+    lines = {}
+    scroll = 0
+    curLine = ""
+    curFg = colors.white
+    display.clear()
+    redraw()
   end
 
   local function readLine()
     local line = ""
+    local histIdx = 0
+    local saved = ""
     local done = false
+
+    scroll = 0
+    redraw(line)
 
     local function onChar(ch)
       line = line .. ch
-      display.write(ch)
+      redraw(line)
     end
 
     local function onKey(key)
       if key == keys.enter then
         done = true
-        local _, cy = display.getCursorPos()
-        display.setCursorPos(1, cy + 1)
-      elseif key == keys.backspace and #line > 0 then
-        line = line:sub(1, -2)
-        local cx, cy = display.getCursorPos()
-        display.setCursorPos(cx - 1, cy)
-        display.write(" ")
-        display.setCursorPos(cx - 1, cy)
+      elseif key == keys.backspace then
+        if #line > 0 then
+          line = line:sub(1, -2)
+          redraw(line)
+        end
+      elseif key == keys.up then
+        if histIdx < #history then
+          if histIdx == 0 then saved = line end
+          histIdx = histIdx + 1
+          line = history[histIdx]
+          redraw(line)
+        end
+      elseif key == keys.down then
+        if histIdx > 0 then
+          histIdx = histIdx - 1
+          line = histIdx == 0 and saved or history[histIdx]
+          redraw(line)
+        end
+      elseif key == keys.pageUp then
+        scrollUp(VIEW_H)
+        redraw(line)
+      elseif key == keys.pageDown then
+        scrollDown(VIEW_H)
+        redraw(line)
+      elseif key == keys.home then
+        scrollToBottom()
+        redraw(line)
       end
+    end
+
+    local function onMouseScroll(_, _, dir)
+      if dir == -1 then
+        scrollUp(3)
+      else
+        scrollDown(3)
+      end
+      redraw(line)
     end
 
     event.subscribe("char", onChar)
     event.subscribe("key", onKey)
+    event.subscribe("mouse_scroll", onMouseScroll)
 
     while not done do
       __kernel.yield(nil)
@@ -53,8 +193,23 @@ function main()
 
     event.unsubscribe("char", onChar)
     event.unsubscribe("key", onKey)
+    event.unsubscribe("mouse_scroll", onMouseScroll)
 
-    return line:match("^%s*(.-)%s*$")
+    local trimmed = line:match("^%s*(.-)%s*$")
+
+    if #trimmed > 0 then
+      table.insert(history, 1, trimmed)
+      if #history > 200 then history[201] = nil end
+
+      curFg   = colors.lime
+      curLine = "ccOS> "
+      curFg   = colors.white
+      curLine = curLine .. trimmed
+      flushLine()
+    end
+
+    scroll = 0
+    return trimmed
   end
 
   local cmds = {}
@@ -253,10 +408,10 @@ function main()
   println("╚══════════════════════════════╝")
   color(colors.gray)
   println("Capabilities are apps. Type 'help'.")
-  reset(); println("")
+  println("")
+  reset()
 
   while true do
-    prompt()
     local line = readLine()
     if #line == 0 then goto continue end
 
