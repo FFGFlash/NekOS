@@ -41,8 +41,6 @@ function kernel.boot()
 end
 
 function kernel.spawnApp(name, path, requestedCaps, version, args)
-  print(path)
-
   local caps_mod = kernel._caps_mod
   local loader = kernel._loader
 
@@ -78,8 +76,8 @@ function kernel.spawnApp(name, path, requestedCaps, version, args)
     proc.co = coroutine.create(function()
       callbacks.main(table.unpack(args or {}))
     end)
-    klog("spawned [" .. pid .. "] " .. name .. (version and "@" .. version) or
-      "" .. " caps=" .. table.concat(requestedCaps or {}, ","))
+    klog("spawned [" .. pid .. "] " .. name .. (version and ("@" .. version) or "")
+      .. " caps=" .. table.concat(requestedCaps or {}, ","))
     resume(proc)
   else
     klog("loaded (no main) [" .. pid .. "] " .. name)
