@@ -202,7 +202,7 @@ function main()
       if #history > 200 then history[201] = nil end
 
       curFg   = colors.lime
-      curLine = "ccOS> "
+      curLine = "NekOS> "
       curFg   = colors.white
       curLine = curLine .. trimmed
       flushLine()
