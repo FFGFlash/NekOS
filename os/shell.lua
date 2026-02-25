@@ -73,7 +73,7 @@ function main()
     display.setTextColor(colors.white)
     display.write(displayInput)
 
-    display.setCursorPos(7 + #displayInput, H)
+    display.setCursorPos(8 + #displayInput, H)
     display.setCursorBlink(true)
     display.setTextColor(colors.white)
   end
