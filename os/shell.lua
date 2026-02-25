@@ -174,7 +174,7 @@ function main()
       end
     end
 
-    local function onMouseScroll(_, _, dir)
+    local function onMouseScroll(dir)
       if dir == -1 then
         scrollUp(3)
       else
